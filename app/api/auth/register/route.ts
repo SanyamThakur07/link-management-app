@@ -1,21 +1,39 @@
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";    
+import bcrypt from "bcrypt";
+import { json } from "stream/consumers";
 
-const prisma  = new PrismaClient();
+const prisma = new PrismaClient();
 
-export default async function handler(req: any, res: any) {
-    if(req.method !== "POST") return res.status(405).end();
+export async function POST(req: any, res: any) {
+    try {
+        const body = await req.json();
+        const { email, password } = body;
 
-    const { email, password } = req.body;
-    if(!email || !password) return res.status(405).json({ error : "Missing fields" });
+        if (!email || !password) {
+            return new Response(JSON.stringify({ error: "Missing fields" }), { status: 400 });
+        }
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if(existingUser) return res.status(400).json({ error: "User already exists" });
+        const existingUser = await prisma.user.findUnique({
+            where: { email }
+        });
 
-const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-        data: { email, hashedPassword },
-    });
+        if (existingUser) {
+            return new Response(JSON.stringify({ error: "User already exists" }), { status: 400 });
+        }
 
-    return res.status(201).json({message: "User created", userId: user.id});
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await prisma.user.create({
+            data: { email, hashedPassword },
+        });
+
+        return new Response(JSON.stringify({ message: "User created", userId: user.id }), { status: 201 });
+    }
+    catch (e) {
+        console.log("Registration Error: ", e);
+        return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
+    }
+
+
+
+
 }
