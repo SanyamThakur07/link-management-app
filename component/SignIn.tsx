@@ -17,7 +17,16 @@ export default function SignIn() {
       body: JSON.stringify({ email, password }),
     });
     if (res.ok) {
-      await signIn("credentials", { email, password, callbackUrl: "/profile" });
+      const result = await signIn("credentials", { 
+        email, 
+        password, 
+        callbackUrl: "/profile",
+        redirect: true,
+      });
+      
+      if (result?.error) {
+        setError("Sign in failed after registration");
+      }
     } else {
       const data = await res.json();
       setError(data.error || "Sign up failed");

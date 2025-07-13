@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { json } from "stream/consumers";
 
 const prisma = new PrismaClient();
 
