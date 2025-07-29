@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Link Management App
+
+This is a full-stack link management application built with Next.js, allowing users to sign up, create a profile, and share a collection of their links on a single, public page.
+
+## Features
+
+*   **Authentication:** Users can sign up and sign in using email/password credentials or their Google account.
+*   **Profile Customization:** Users can set a display name and a short bio for their profile.
+*   **Link Management:** Add, and manage a list of personal or social links.
+*   **Public Profile Page:** A dedicated, shareable page that displays the user's profile information and all their links.
+
+## Tech Stack
+
+*   **Framework:** [Next.js](https://nextjs.org/)
+*   **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+*   **Database ORM:** [Prisma](https://www.prisma.io/)
+*   **Database:** [PostgreSQL](https://www.postgresql.org/)
+*   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+*   **Language:** [TypeScript](https://www.typescriptlang.org/)
 
 ## Getting Started
 
-First, run the development server:
+Follow these instructions to get a local copy of the project up and running.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
+
+*   [Node.js](https://nodejs.org/en/) (v20 or later)
+*   [pnpm](https://pnpm.io/installation)
+*   A PostgreSQL database instance.
+
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd link-management-app
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    pnpm install
+    ```
+
+3.  **Set up environment variables:**
+    Create a `.env` file in the root of the project and add the following variables:
+
+    ```env
+    # Get credentials from https://console.cloud.google.com/
+    GOOGLE_CLIENT_ID=
+    GOOGLE_CLIENT_SECRET=
+
+    # Connection string for your PostgreSQL database
+    DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
+
+    # A secret for NextAuth.js, generate with `openssl rand -base64 32`
+    NEXTAUTH_SECRET=
+    ```
+
+4.  **Run database migrations:**
+    Apply the database schema to your PostgreSQL instance.
+    ```bash
+    npx prisma migrate dev
+    ```
+
+5.  **Run the development server:**
+    ```bash
+    pnpm dev
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API Endpoints
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application exposes the following API endpoints:
 
-## Learn More
+*   `/api/auth/[...nextauth]`: Handles all NextAuth.js authentication logic (sign in, sign out, callbacks).
+*   `/api/auth/register`: Handles new user registration with email and password.
+*   `/api/auth/user`: Manages user profile data (display name, bio).
+*   `/api/auth/links`: Handles saving new links for a user.
+*   `/api/auth/page-data`: Fetches all necessary data for the final user profile page.
 
-To learn more about Next.js, take a look at the following resources:
+## Final Page
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+![Final Page](./public/page.png)
